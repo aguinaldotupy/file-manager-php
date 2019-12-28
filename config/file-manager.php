@@ -2,29 +2,28 @@
 
 return [
 
-	/*
+    /*
     |--------------------------------------------------------------------------
     | Bucket default 
     |--------------------------------------------------------------------------
     |
     */
+    'no_image' => env('FILE_MANAGER_NO_IMAGE', '/images/noImage.png'),
 
-    'no_image' => env('FILE_MANAGER_NO_IMAGE', '/helper/noImage.png'),
+    'no_file' => env('FILE_MANAGER_NO_FILE', '/images/noImage.png'),
 
-    'no_file' => env('FILE_MANAGER_NO_FILE', '/helper/noImage.png'),
+    'placeholder' => env('FILE_MANAGER_PLACEHOLDER', 'https://placehold.it/160x160/c98959/ffffff/&text=D'),
 
-    'placeholder' => env('FILE_MANAGER_PLACEHOLDER', 'https://placehold.it/160x160/00a65a/ffffff/&text==/'),
+    'path_model' => env('FILE_MANAGER_PATH_TO_MODELS', 'App\\Models\\'),
 
-    'path_to_models' => env('FILE_MANAGER_PATH_TO_MODELS', 'App\\Models\\'),
+    'disk_default' => env('FILESYSTEM_DRIVER'),
 
-
-	/*
+    /*
     |--------------------------------------------------------------------------
-    | Minutes expired temporary url 
+    | Minutes expired temporary url
     |--------------------------------------------------------------------------
     |
     */
-
-    'interval_temporary' => env('FILE_MANAGER_TIME_TEMPORARY', 5);
+    'interval_temporary' => env('FILE_MANAGER_TIME_TEMPORARY', 5)
 
 ];

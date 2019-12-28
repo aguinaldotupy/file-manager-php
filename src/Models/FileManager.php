@@ -1,6 +1,6 @@
 <?php
 
-namespace Tupy\FileManager;
+namespace Tupy\FileManager\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,20 +25,9 @@ class FileManager extends Model
      *
      * @var array
      */
-    // protected $guarded = ['authenticatable_id', 'authenticatable_type'];
  	protected $fillable = [
-        'fileable_id', 'fileable_type', 'type', 'file_name', 'mime_type', 'size', 'path_storage', 'disk', 'visibility', 'thumbnail', 'tags', 'observation', 'caption', 'order', 'origem', 'expiration_date'
+        'fileable_id', 'fileable_type', 'type', 'full_name', 'name', 'mime_type', 'extension', 'size', 'path_storage', 'disk', 'visibility', 'thumbnail', 'tags', 'observation', 'caption', 'order', 'origem', 'expiration_date', 'true_timestamp'
     ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    // protected $casts = [
-    //     'login_at' => 'datetime',
-    //     'logout_at' => 'datetime',
-    // ];
 
     /**
      * Get the fileable entity that the file belongs to.
