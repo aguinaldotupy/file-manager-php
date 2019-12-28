@@ -3,11 +3,11 @@
 namespace Tupy\AuthenticationLog\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
-use ZipArchive;
+use Illuminate\Routing\Controller as BaseController;
+use \ZipArchive;
 
-class FileManagerController extends Controller
+class FileManagerController extends BaseController
 {
     public function download(Request $request)
     {
@@ -15,23 +15,15 @@ class FileManagerController extends Controller
         //Brevemente disponível
         $path = $request->file;
 
-        $fs = Storage::getDriver();
-        $stream = $fs->readStream($path);
-        return \Response::stream(function () use ($stream) {
-            fpassthru($stream);
-        }, 200, [
-            "Content-Type" => $fs->getMimetype($path),
-            "Content-Length" => $fs->getSize($path),
-            "Content-disposition" => "attachment; filename=\"" . basename($path) . "\"",
-        ]);
+        return response()->download($path);
     }
 
     public function downloadAlbum($object_instance, $album)
     {
-        $album = $request->album;
+        $album = request('album');
 
-        $model = "\\App\\Models\\" . $request->model;
-        $report = $model::find($request->id);
+        $model = "\\App\\Models\\" . request('model');
+        $report = $model::find(request('id'));
         $path = 'storage/temp/' . $album.'_'.time() . '.zip';
 
         $photos = $report->file()->get();
