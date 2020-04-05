@@ -3,11 +3,11 @@
 namespace Tupy\FileManager\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Storage;
 /**
  * Class FileManager
  * @package Webteam\FileManager\Models
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Query\Builder|\Illuminate\Database\Schema\Builder|\Illuminate\Database\Schema\Builder
  * @property int $id
  * @property string $fileable_type
  * @property int $fileable_id
@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $origin
  * @property string|null $true_timestamp
  * @property string|null $expiration_date
+ * @property-read string $url
  */
 class FileManager extends Model
 {
@@ -63,18 +64,51 @@ class FileManager extends Model
         return $this->morphTo();
     }
 
-    public function deletePhoto()
+    protected static function booted()
     {
-        return \Storage::disk($this->disk)->delete($this->full_name);
+        static::deleted(function ($file) {
+            /** @var \Tupy\FileManager\Models\FileManager $file */
+            $file->deleteFile();
+        });
+    }
 
+    /**
+     * @throws \Exception
+     * @return bool
+     */
+    public function deleteFile()
+    {
+        $storage = Storage::disk($this->disk);
+
+        if(! $storage->exists($this->full_name)){
+            throw new \Exception("File {$this->name} not exist in disk {$this->disk}");
+        }
+
+        return Storage::disk($this->disk)->delete($this->full_name);
     }
 
     public function getPrivateUrlAttribute()
     {
         if ($this->full_name && Storage::disk($this->disk)->exists($this->full_name)) {
-            return \Storage::disk($this->disk)->temporaryUrl($this->full_name, now()->addMinutes(5));
+            return Storage::disk($this->disk)->temporaryUrl($this->full_name, now()->addMinutes(5));
         }
 
         return false;
+    }
+
+    public function getUrlAttribute()
+    {
+        $storage = Storage::disk($this->disk);
+
+        if ($this->full_name && $storage->exists($this->full_name)) {
+
+            if ($this->visibility === 'private') {
+                return $storage->temporaryUrl($this->full_name, now()->addMinutes(5));
+            }
+
+            return $storage->url($this->full_name);
+        }
+
+        return null;
     }
 }
