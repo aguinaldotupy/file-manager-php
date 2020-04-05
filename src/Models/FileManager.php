@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Class FileManager
  * @package Webteam\FileManager\Models
- * @mixin \Illuminate\Database\Query\Builder|\Illuminate\Database\Schema\Builder|\Illuminate\Database\Schema\Builder
+ * @mixin \Illuminate\Database\Eloquent\Builder|Model
  * @property int $id
  * @property string $fileable_type
  * @property int $fileable_id
@@ -74,7 +74,7 @@ class FileManager extends Model
 
     /**
      * @throws \Exception
-     * @return bool
+     * @return \Tupy\FileManager\Models\FileManager
      */
     public function deleteFile()
     {
@@ -84,7 +84,9 @@ class FileManager extends Model
             throw new \Exception("File {$this->name} not exist in disk {$this->disk}");
         }
 
-        return Storage::disk($this->disk)->delete($this->full_name);
+        Storage::disk($this->disk)->delete($this->full_name);
+
+        return $this;
     }
 
     public function getPrivateUrlAttribute()
