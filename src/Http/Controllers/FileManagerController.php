@@ -1,6 +1,6 @@
 <?php
 
-namespace Tupy\AuthenticationLog\Http\Controllers;
+namespace Tupy\FileManager\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
