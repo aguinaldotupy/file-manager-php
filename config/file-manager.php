@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Bucket default 
+    | Bucket default
     |--------------------------------------------------------------------------
     |
     */
@@ -24,6 +24,7 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'interval_temporary' => env('FILE_MANAGER_TIME_TEMPORARY', 5)
+    'interval_temporary' => env('FILE_MANAGER_TIME_TEMPORARY', 5),
 
+    'middleware' => 'auth'
 ];

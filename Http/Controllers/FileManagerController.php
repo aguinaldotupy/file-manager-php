@@ -2,13 +2,31 @@
 
 namespace Tupy\AuthenticationLog\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\Controller as BaseController;
+use Tupy\FileManager\Models\FileManager;
 use \ZipArchive;
 
 class FileManagerController extends BaseController
 {
+    public function __construct()
+    {
+        $this->middleware(config('file-manager.middleware'));
+    }
+
+    public function destroy(FileManager $file)
+    {
+        try {
+            $file->delete();
+        } catch (\Exception $e) {
+            throw new \Error('FileManager: ' . $e->getMessage(), $e->getCode());
+        }
+
+        return new JsonResponse(['message' => 'Deleted successfully'], 200);
+    }
+
     public function download(Request $request)
     {
         dd($request);
