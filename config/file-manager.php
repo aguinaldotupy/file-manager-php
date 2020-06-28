@@ -26,5 +26,5 @@ return [
     */
     'interval_temporary' => env('FILE_MANAGER_TIME_TEMPORARY', 5),
 
-    'middleware' => 'auth'
+    'middleware' => ['auth']
 ];

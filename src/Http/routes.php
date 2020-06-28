@@ -8,6 +8,6 @@ Route::group([
 ], function () {
     Route::GET('/download-file', 'FileManagerController@download')->name('fileManager.download.file');
     Route::GET('/download-album-zip', 'FileManagerController@downloadAlbum')->name('fileManager.download.album');
-    Route::DELETE('/destroy', 'FileManagerController@destroy')->name('fileManager.destroy');
+    Route::DELETE('/destroy/{file}', 'FileManagerController@destroy')->name('fileManager.destroy');
 });
 

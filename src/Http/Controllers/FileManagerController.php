@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\Controller as BaseController;
 use Tupy\FileManager\Models\FileManager;
+use Tupy\FileManager\Traits\AuthorizesRequests;
 use \ZipArchive;
 
 class FileManagerController extends BaseController
 {
+    use AuthorizesRequests;
+
     public function __construct()
     {
         $this->middleware(config('file-manager.middleware'));
