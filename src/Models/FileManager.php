@@ -40,6 +40,8 @@ class FileManager extends Model
      */
     protected $table = 'file_manager';
 
+    public $minutesInPrivateTemporary = 5;
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -67,20 +69,18 @@ class FileManager extends Model
     protected static function booted()
     {
         static::deleted(function ($file) {
-            /** @var \Tupy\FileManager\Models\FileManager $file */
+            /** @var FileManager $file */
             $file->deleteFile();
         });
     }
 
     /**
      * @throws \Exception
-     * @return \Tupy\FileManager\Models\FileManager
+     * @return FileManager
      */
     public function deleteFile()
     {
-        $storage = Storage::disk($this->disk);
-
-        if(! $storage->exists($this->full_name)){
+        if($this->fileNotExists()){
             throw new \Exception("File {$this->name} not exist in disk {$this->disk}");
         }
 
@@ -92,7 +92,7 @@ class FileManager extends Model
     public function getPrivateUrlAttribute()
     {
         if ($this->full_name && Storage::disk($this->disk)->exists($this->full_name)) {
-            return Storage::disk($this->disk)->temporaryUrl($this->full_name, now()->addMinutes(5));
+            return Storage::disk($this->disk)->temporaryUrl($this->full_name, now()->addMinutes($this->minutesInPrivateTemporary));
         }
 
         return false;
@@ -102,7 +102,7 @@ class FileManager extends Model
     {
         $storage = Storage::disk($this->disk);
 
-        if ($this->full_name && $storage->exists($this->full_name)) {
+        if ($this->fileExists()) {
 
             if ($this->visibility === 'private') {
                 return $storage->temporaryUrl($this->full_name, now()->addMinutes(5));
@@ -112,5 +112,19 @@ class FileManager extends Model
         }
 
         return null;
+    }
+
+    public function fileExists()
+    {
+        if (is_null($this->disk) || is_null($this->full_name)) {
+            return false;
+        }
+
+        return Storage::disk($this->disk)->exists($this->full_name);
+    }
+
+    public function fileNotExists()
+    {
+        return ! $this->fileExists();
     }
 }
