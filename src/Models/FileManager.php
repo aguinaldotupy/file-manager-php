@@ -127,4 +127,18 @@ class FileManager extends Model
     {
         return ! $this->fileExists();
     }
+
+    public function getCdnUrlAttribute()
+    {
+        $config = config("filesystems.disks.{$this->disk}");
+        $url = $this->getUrlPhotoAttribute();
+        if (!is_null($url)) {
+            if (isset($config['cdn']) && strlen($config['cdn']) > 0) {
+                $url = str_replace($config['endpoint'], $config['cdn'], $url);
+            }
+            return $url;
+        }
+
+        return null;
+    }
 }

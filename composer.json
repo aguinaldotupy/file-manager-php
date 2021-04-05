@@ -10,16 +10,16 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2|^8.0",
         "ext-zip": "*",
-        "illuminate/auth": "^6.0|^7.17",
-        "illuminate/config": "^6.0|^7.17",
-        "illuminate/console": "^6.0|^7.0",
-        "illuminate/database": "^6.0|^7.0",
-        "illuminate/filesystem": "^6.0|^7.0",
-        "illuminate/http": "^6.0|^7.0",
-        "illuminate/routing": "^6.0|^7.0",
-        "illuminate/support": "^6.0|^7.0",
+        "illuminate/auth": "^7.30|^8.0",
+        "illuminate/config": "^7.30|^8.0",
+        "illuminate/console": "^7.30|^8.0",
+        "illuminate/database": "^7.30|^8.0",
+        "illuminate/filesystem": "^7.30|^8.0",
+        "illuminate/http": "^7.30|^8.0",
+        "illuminate/routing": "^7.30|^8.0",
+        "illuminate/support": "^7.30|^8.0",
         "intervention/image": "^2.4",
         "phpoffice/phpspreadsheet": "^1.10"
     },
@@ -30,7 +30,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2.1-dev"
+            "dev-master": "2.2.2-dev"
         },
         "laravel": {
             "providers": [
