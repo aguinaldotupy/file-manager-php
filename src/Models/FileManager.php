@@ -134,7 +134,7 @@ class FileManager extends Model
         $url = $this->getUrlPhotoAttribute();
         if (!is_null($url)) {
             if (isset($config['cdn']) && strlen($config['cdn']) > 0) {
-                $url = str_replace($config['endpoint'], $config['cdn'], $url);
+                $url = str_replace($config['url'], $config['cdn'], $url);
             }
             return $url;
         }
