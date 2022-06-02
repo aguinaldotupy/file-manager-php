@@ -92,7 +92,9 @@ class Exporter
         $this->diskToSave = $diskToSave;
 
         //Cria o diretório (caso não existir) para salvar o arquivo
-        Storage::disk($diskToSave)->makeDirectory($pathToSave);
+        if (! Storage::disk($this->diskToSave)->directoryExists($this->pathToSave)) {
+            Storage::disk($this->diskToSave)->makeDirectory($this->pathToSave);
+        }
 
         //Onde será salvo
         $this->relativePath = storage_path("app/{$diskToSave}/{$pathToSave}/{$this->fullFileName}");
