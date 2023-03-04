@@ -20,8 +20,8 @@
         "illuminate/http": ">=7.30",
         "illuminate/routing": ">=7.30",
         "illuminate/support": ">=7.30",
-        "intervention/image": "^2.4",
-        "phpoffice/phpspreadsheet": "^1.10"
+        "intervention/image": ">=2.4",
+        "phpoffice/phpspreadsheet": ">=1.10"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +30,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.3.x-dev"
+            "dev-master": "3.0.x-dev"
         },
         "laravel": {
             "providers": [
