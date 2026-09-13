@@ -18,6 +18,8 @@ return [
 
     'disk_default' => env('FILESYSTEM_DRIVER'),
 
+    'image_driver' => env('FILE_MANAGER_IMAGE_DRIVER', \Intervention\Image\Drivers\Gd\Driver::class),
+
     /*
     |--------------------------------------------------------------------------
     | Minutes expired temporary url

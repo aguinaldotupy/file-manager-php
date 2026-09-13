@@ -5,8 +5,11 @@ namespace Tupy\FileManager;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Constraint;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\FileExtensionEncoder;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\EncodedImageInterface;
+use Intervention\Image\Interfaces\ImageInterface;
 use Tupy\FileManager\Models\FileManager;
 
 class ManagerFile
@@ -139,31 +142,46 @@ class ManagerFile
         if ($this->file) {
 
             // if a base64 was sent, store it in the db
-            if (Str::startsWith($this->file, 'data:image') || is_file($this->file)) {
+            if ((is_string($this->file) && Str::startsWith($this->file, 'data:image')) || is_file($this->file)) {
 
                 $storage = Storage::disk($this->disk);
 
-                //Make the image
-                $image = Image::make($this->file);
+                $driver = config('file-manager.image_driver') ?: Driver::class;
+                $manager = new ImageManager($driver);
 
-                $this->mimeTypeExtension = $image->mime();
+                if (is_string($this->file) && Str::startsWith($this->file, 'data:image')) {
+                    $image = $manager->decodeDataUri($this->file);
+                } elseif ($this->file instanceof \SplFileInfo) {
+                    $image = $manager->decodeSplFileInfo($this->file);
+                } else {
+                    $image = $manager->decodePath($this->file);
+                }
+
+                $this->mimeTypeExtension = $image->origin()->mediaType();
                 $this->extension = Utils::getExtByMimeType($this->mimeTypeExtension);
 
-                if($closure){
-                    $image = call_user_func($closure, $image);
+                if ($closure) {
+                    $result = call_user_func($closure, $image);
+                    if ($result instanceof EncodedImageInterface) {
+                        $encoded = $result;
+                    } elseif ($result instanceof ImageInterface) {
+                        $encoded = $result->encode(new FileExtensionEncoder($this->extension));
+                    } else {
+                        $encoded = $image->encode(new FileExtensionEncoder($this->extension));
+                    }
                 } else {
-                    $image->encode($this->extension);
+                    $encoded = $image->encode(new FileExtensionEncoder($this->extension));
                 }
 
                 //Generate a filename.
-                if(!$this->filename){
+                if (!$this->filename) {
                     $this->filename = md5($this->file . time()) . '.' . $this->extension;
                 }
 
-                $this->size = $image->filesize();
+                $this->size = $encoded->size();
 
                 //Store the image on disk.
-                $upload = $storage->put($this->path . '/' . $this->filename, $image->stream(), $this->visibility);
+                $upload = $storage->put($this->path . '/' . $this->filename, $encoded->toString(), $this->visibility);
 
                 // Se o store der certo, envia os dados de retorno para salvar na relacão de tabela
                 if ($upload && $save_relation) {
